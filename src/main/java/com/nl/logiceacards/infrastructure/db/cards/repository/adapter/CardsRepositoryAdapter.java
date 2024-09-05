@@ -19,12 +19,11 @@ import com.nl.logiceacards.domain.model.card.Card;
 import com.nl.logiceacards.domain.model.card.command.DeleteCardCommand;
 import com.nl.logiceacards.domain.model.card.command.UpdateCardCommand;
 import com.nl.logiceacards.domain.model.card.query.FindCardQuery;
-import static com.nl.logiceacards.infrastructure.db.cards.repository.specification.CardSpecification.hasUserId;
-import com.nl.logiceacards.infrastructure.db.exception.ResourceNotFoundException;
 import com.nl.logiceacards.infrastructure.configuration.security.ApiTokenAuthFacade;
 import com.nl.logiceacards.infrastructure.db.cards.entity.CardEntity;
 import com.nl.logiceacards.infrastructure.db.cards.repository.CardsRepository;
-
+import static com.nl.logiceacards.infrastructure.db.cards.repository.specification.CardSpecification.hasUserId;
+import com.nl.logiceacards.infrastructure.db.exception.ResourceNotFoundException;
 import com.nl.logiceacards.infrastructure.db.users.entity.AppUserEntity;
 import com.nl.logiceacards.infrastructure.web.responses.CardResponse;
 import lombok.RequiredArgsConstructor;
@@ -81,8 +80,7 @@ public class CardsRepositoryAdapter implements CardsRepositoryPort {
         var user = apiTokenAuthFacade.getAuthenticatedUser();
         spec = createUserSpecification(spec, user);
         
-        var entities = cardsRepository.findAll(spec);
-        return entities
+        return cardsRepository.findAll(spec)
                               .stream()
                               .map(CardsRepositoryAdapterMapper.INSTANCE::toDomain)
                               .toList();

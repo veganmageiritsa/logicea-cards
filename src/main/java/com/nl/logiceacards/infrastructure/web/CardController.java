@@ -69,7 +69,7 @@ public class CardController {
             CardControllerMapper.INSTANCE.toDto(
                 createCardUseCase.createCard(CardControllerMapper.INSTANCE.toCommand(createCardRequest))
             ),
-            HttpStatus.OK
+            HttpStatus.CREATED
         );
     }
     
