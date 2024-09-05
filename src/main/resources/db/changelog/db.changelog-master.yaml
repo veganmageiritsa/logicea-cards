@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-changelog
+      author: Nikolas Leontiou
+      context: test, production, development
+      preConditions:
+        - onFail: HALT
+        - onError: HALT
+          not:
+            - tableExists:
+                - schemaName: card
+                - tableName: app_users
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: db/changelog/scripts/01-app-users-tables.sql
+            relativeToChangelogFile: false
+            splitStatements: true
+            stripComments: true
+
+  - changeSet:
+      id: 02-changelog
+      author: Nikolas Leontiou
+      context: test, production, development
+      preConditions:
+        - onFail: HALT
+        - onError: HALT
+          not:
+            - tableExists:
+               - schemaName: cards
+               - tableName: cards
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: db/changelog/scripts/02-card-tables.sql
+            relativeToChangelogFile: false
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: 03-changelog
+      author: Nikolas Leontiou
+      context: test
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM cards
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: db/changelog/scripts/03-test-data.sql
+            relativeToChangelogFile: false
+            splitStatements: true
+            stripComments: true

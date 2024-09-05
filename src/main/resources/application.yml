@@ -1,0 +1,70 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    min-response-size: 8
+    mime-types:
+      - application/json
+      - application/xml
+      - text/plain
+  error:
+    include-message: always
+    include-binding-errors: always
+spring:
+  threads:
+    virtual:
+      enabled: true
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    enabled: true
+    contexts: development
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cards
+    username: user
+    password: password
+    hikari:
+      maximum-pool-size: 20
+      pool-name: SpringBootSchumacherJPAHikariCP
+      auto-commit: false
+      connection-timeout: 300000
+      max-lifetime: 1200000
+      isolate-internal-queries: true
+      data-source-properties:
+        reWriteBatchedInserts: true
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        format-sql: true
+        connection:
+          provider_disables_autocommit: true
+        generate_statistics: false
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+        jdbc:
+          time_zone: UTC
+          batch_size: 200
+        format_sql: true
+        show_sql: false
+
+application:
+  security:
+    app:
+      jwt-secret: ODBXVEZmZ3JDQ09lNHN4MHlvb2hQeXk5aW5sZzNmZks3M3ZNaU9hanNtTFRYZnhkaFI=
+      jwt-expiration: 86400000
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  liquibase:
+    contexts: test
