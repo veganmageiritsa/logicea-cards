@@ -23,12 +23,12 @@ public class CardSearchCriteria {
     
     private Integer userId;
     
-    //    private int pageNo;
-    //
-    //    private int pageSize;
-    //
-    //    private String sortBy;
-    //
-    //    private String sortDirection;
+    private Integer pageNo;
+    
+    private Integer pageSize;
+    
+    private String sortBy;
+    
+    private String sortDirection;
     
 }

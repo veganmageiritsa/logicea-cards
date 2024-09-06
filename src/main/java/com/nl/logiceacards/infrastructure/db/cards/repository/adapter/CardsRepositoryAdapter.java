@@ -1,10 +1,10 @@
 package com.nl.logiceacards.infrastructure.db.cards.repository.adapter;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +26,9 @@ import com.nl.logiceacards.infrastructure.db.cards.repository.CardsRepository;
 import static com.nl.logiceacards.infrastructure.db.cards.repository.specification.CardSpecification.hasUserId;
 import com.nl.logiceacards.infrastructure.db.exception.ResourceNotFoundException;
 import com.nl.logiceacards.infrastructure.db.users.entity.AppUserEntity;
+import com.nl.logiceacards.infrastructure.web.mappers.CardMapper;
 import com.nl.logiceacards.infrastructure.web.responses.CardResponse;
+import com.nl.logiceacards.infrastructure.web.responses.CardsPageResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,6 +39,8 @@ public class CardsRepositoryAdapter implements CardsRepositoryPort {
     private final CardsRepository cardsRepository;
     
     private final ApiTokenAuthFacade apiTokenAuthFacade;
+    
+    private final CardMapper cardMapper;
     
     @Override
     public Card createCard(final Card card) {
@@ -81,14 +85,11 @@ public class CardsRepositoryAdapter implements CardsRepositoryPort {
     }
     
     @Override
-    public List<Card> searchCards( Specification<CardEntity> spec) {
+    public CardsPageResponse<CardResponse> searchCards(Specification<CardEntity> spec, final PageRequest pageable) {
         var user = apiTokenAuthFacade.getAuthenticatedUser();
         spec = createUserSpecification(spec, user);
-        
-        return cardsRepository.findAll(spec)
-                              .stream()
-                              .map(CardsRepositoryAdapterMapper.INSTANCE::toDomain)
-                              .toList();
+        var cardEntities = cardsRepository.findAll(spec, pageable);
+        return cardMapper.toCardsPageResponse(cardEntities);
     }
     
     

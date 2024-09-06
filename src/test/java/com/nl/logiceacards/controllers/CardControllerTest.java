@@ -22,6 +22,7 @@ import com.nl.logiceacards.infrastructure.db.cards.repository.criteria.CardSearc
 import com.nl.logiceacards.infrastructure.db.users.repository.AppUserRepository;
 import com.nl.logiceacards.infrastructure.web.requests.CreateCardRequest;
 import com.nl.logiceacards.infrastructure.web.requests.UpdateCardRequest;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.securityContext;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -145,9 +146,11 @@ class CardControllerTest extends ContainerIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
+               .andExpect(jsonPath("$.content", hasSize(2)))
                .andExpectAll(
-                   MockMvcResultMatchers.jsonPath("$[0].id").value(4),
-                   MockMvcResultMatchers.jsonPath("$[1].id").value(5));
+                   MockMvcResultMatchers.jsonPath("$.content..[0].id").value(4),
+                   MockMvcResultMatchers.jsonPath("$.content..[1].id").value(5)
+               );
     }
     
 }

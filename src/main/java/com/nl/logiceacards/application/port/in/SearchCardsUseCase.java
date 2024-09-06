@@ -1,12 +1,11 @@
 package com.nl.logiceacards.application.port.in;
 
-import java.util.List;
-
-import com.nl.logiceacards.domain.model.card.Card;
 import com.nl.logiceacards.domain.model.card.CardsFilter;
+import com.nl.logiceacards.infrastructure.web.responses.CardResponse;
+import com.nl.logiceacards.infrastructure.web.responses.CardsPageResponse;
 
 public interface SearchCardsUseCase {
     
-    List<Card> searchCards(CardsFilter filter);
+    CardsPageResponse<CardResponse> searchCards(CardsFilter filter);
     
 }
