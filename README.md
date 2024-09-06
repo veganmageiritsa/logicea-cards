@@ -3,18 +3,18 @@ Project for card management
 
 ## Installation
 Runs as a normal spring boot project
-or
-Open a terminal and navigate to project directory
-and run the following command
+
+run the following command
 - mvn clean install
 Navigate to docker-compose file and run
-- docker-compose up
+- docker-compose up or launch it from intellij
+- Launch spring boot App by running LogiceaCardsApplication
 
 Two users have been created
 1 username nikleontiou@gmail.com password = ferno admin role
 2 username alibaba@gmail.com password = alibaba  user role
 
-P.S is build on mac m1 chip
+P.S is build on mac m3 chip
 
 ## Test the application
 Endpoints provided
