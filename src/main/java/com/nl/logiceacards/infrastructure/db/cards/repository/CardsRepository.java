@@ -28,7 +28,6 @@ public interface CardsRepository extends JpaRepository<CardEntity, Integer>, Jpa
     Page<CardEntity> findAll(@Nullable Specification<CardEntity> spec, @NonNull Pageable pageable);
     
     @Override
-//    @PostAuthorize("hasRole('ROLE_ADMIN') || @securityService.isResourceOwner(returnObject)")
     List<CardEntity> findAll(Specification<CardEntity> spec ); // <1>
     
 }

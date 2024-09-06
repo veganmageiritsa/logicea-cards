@@ -87,7 +87,7 @@ class CardUseCasesTest extends ContainerIntegrationTest {
         SecurityContextHolder.getContext()
                              .setAuthentication(new TestingAuthenticationToken(apiUser, apiUser.getUsername(), apiUser.getPassword()));
         
-        CardsFilter filter = new CardsFilter("Feature", null, null, null, null, null, 0, 100, null, null);
+        CardsFilter filter = new CardsFilter("Feature", null, null, null, null, null);
         var cards = searchCardsUseCase.searchCards(filter);
         
         Assertions.assertEquals(3, cards.size());
@@ -99,10 +99,22 @@ class CardUseCasesTest extends ContainerIntegrationTest {
         SecurityContextHolder.getContext()
                              .setAuthentication(new TestingAuthenticationToken(apiUser, apiUser.getUsername(), apiUser.getPassword()));
         
-        CardsFilter filter = new CardsFilter("Feature", null, null, null, null, null, 0, 100, null, null);
+        CardsFilter filter = new CardsFilter("Feature", null, null, null, null, null);
         var cards = searchCardsUseCase.searchCards(filter);
         
         Assertions.assertEquals(1, cards.size());
+    }
+    
+    @Test
+    void searchCardsWithUserId() {
+        var apiUser = appUserRepository.findById(2).orElseThrow();
+        SecurityContextHolder.getContext()
+                             .setAuthentication(new TestingAuthenticationToken(apiUser, apiUser.getUsername(), apiUser.getPassword()));
+        
+        CardsFilter filter = new CardsFilter(null, null, null, null, null, 2);
+        var cards = searchCardsUseCase.searchCards(filter);
+        
+        Assertions.assertEquals(2, cards.size());
     }
     
 }

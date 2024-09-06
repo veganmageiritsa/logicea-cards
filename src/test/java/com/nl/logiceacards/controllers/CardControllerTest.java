@@ -114,4 +114,19 @@ class CardControllerTest extends ContainerIntegrationTest {
         
     }
     
+    @Test
+    void controllerDeleteCardRequestForbidden() throws Exception {
+        var apiUser = appUserRepository.findById(2).orElseThrow();
+        var securityContext = SecurityContextHolder.getContext();
+        securityContext
+            .setAuthentication(new UsernamePasswordAuthenticationToken(apiUser, null, apiUser.getAuthorities()));
+        
+        mockMvc.perform(MockMvcRequestBuilders
+                            .delete("/app/cards/{cardId}", 1)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().isForbidden());
+        
+    }
+    
 }

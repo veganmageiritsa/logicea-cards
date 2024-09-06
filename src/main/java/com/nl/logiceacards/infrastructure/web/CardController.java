@@ -15,20 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
-
 import com.nl.logiceacards.application.port.in.CreateCardUseCase;
 import com.nl.logiceacards.application.port.in.DeleteCardUseCase;
 import com.nl.logiceacards.application.port.in.FindCardUseCase;
 import com.nl.logiceacards.application.port.in.FindCardsUseCase;
 import com.nl.logiceacards.application.port.in.UpdateCardUseCase;
-import com.nl.logiceacards.domain.model.card.Card;
-import com.nl.logiceacards.domain.model.card.command.CreateCardCommand;
 import com.nl.logiceacards.domain.model.card.command.DeleteCardCommand;
-import com.nl.logiceacards.domain.model.card.command.UpdateCardCommand;
-import com.nl.logiceacards.domain.model.card.query.FindCardQuery;
+import com.nl.logiceacards.infrastructure.aspect.LogExecutionTime;
+import com.nl.logiceacards.infrastructure.web.mappers.CardMapper;
 import com.nl.logiceacards.infrastructure.web.requests.CreateCardRequest;
 import com.nl.logiceacards.infrastructure.web.requests.UpdateCardRequest;
 import com.nl.logiceacards.infrastructure.web.responses.CardResponse;
@@ -51,12 +45,15 @@ public class CardController {
     
     private final DeleteCardUseCase deleteCardUseCase;
     
+    private final CardMapper cardMapper;
+    
     @GetMapping("/{cardId}")
+    @LogExecutionTime(additionalMessage = "Get Card")
     public ResponseEntity<CardResponse> findCard(
         @PathVariable(name = "cardId") @NotNull Integer cardId) {
         return new ResponseEntity<>(
-            CardControllerMapper.INSTANCE.toDto(
-                findCardUseCase.findCard(CardControllerMapper.INSTANCE.toQuery(cardId))
+            cardMapper.toDto(
+                findCardUseCase.findCard(cardMapper.toQuery(cardId))
             ),
             HttpStatus.OK
         );
@@ -66,8 +63,8 @@ public class CardController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<CardResponse> createCard(@Valid @RequestBody CreateCardRequest createCardRequest) {
         return new ResponseEntity<>(
-            CardControllerMapper.INSTANCE.toDto(
-                createCardUseCase.createCard(CardControllerMapper.INSTANCE.toCommand(createCardRequest))
+            cardMapper.toDto(
+                createCardUseCase.createCard(cardMapper.toCommand(createCardRequest))
             ),
             HttpStatus.CREATED
         );
@@ -78,8 +75,8 @@ public class CardController {
         @PathVariable(name = "cardId") @NotNull Integer cardId,
         @Valid @RequestBody UpdateCardRequest updateCardRequest) {
         return new ResponseEntity<>(
-            CardControllerMapper.INSTANCE.toDto(
-                updateCardUseCase.updateCard(CardControllerMapper.INSTANCE.toCommand(updateCardRequest, cardId))
+            cardMapper.toDto(
+                updateCardUseCase.updateCard(cardMapper.toCommand(updateCardRequest, cardId))
             ),
             HttpStatus.OK
         );
@@ -87,6 +84,7 @@ public class CardController {
     
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @LogExecutionTime(additionalMessage = "Find All with Pagination and Sorting")
     public ResponseEntity<Page<CardResponse>> findCards(
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "10") int pageSize,
@@ -103,23 +101,6 @@ public class CardController {
         @PathVariable(name = "cardId") @NotNull Integer cardId) {
         deleteCardUseCase.deleteCard(new DeleteCardCommand(cardId));
         return ResponseEntity.ok().build();
-    }
-    
-    
-    @Mapper
-    abstract static class CardControllerMapper {
-        
-        public static CardControllerMapper INSTANCE = Mappers.getMapper(CardControllerMapper.class);
-        
-        abstract CreateCardCommand toCommand(CreateCardRequest dto);
-        
-        abstract CardResponse toDto(Card card);
-        
-        abstract UpdateCardCommand toCommand(UpdateCardRequest dto, int cardId);
-        
-        @Mapping(target = "id", source = "cardId")
-        abstract FindCardQuery toQuery(final Integer cardId) ;
-        
     }
     
 }

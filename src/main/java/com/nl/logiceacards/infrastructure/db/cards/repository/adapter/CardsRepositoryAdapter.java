@@ -1,6 +1,7 @@
 package com.nl.logiceacards.infrastructure.db.cards.repository.adapter;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -58,7 +59,7 @@ public class CardsRepositoryAdapter implements CardsRepositoryPort {
     
     @Override
     public Card updateCard(final UpdateCardCommand command) {
-        return cardsRepository.findById(command.cardId())
+        return getCardById(command.cardId())
                               .map(cardEntity -> {
                                   updateCard(command, cardEntity);
                                   return cardsRepository.save(cardEntity);
@@ -69,10 +70,14 @@ public class CardsRepositoryAdapter implements CardsRepositoryPort {
     
     @Override
     public Card findCard(final FindCardQuery query) {
-        return cardsRepository.findById(query.id())
+        return getCardById(query.id())
                               .map(CardsRepositoryAdapterMapper.INSTANCE::toDomain)
                               .orElseThrow(
                                   () -> new ResourceNotFoundException("Card not found for specific id : " + query.id()));
+    }
+    
+    private Optional<CardEntity> getCardById(int id) {
+        return cardsRepository.findById(id);
     }
     
     @Override
@@ -89,7 +94,7 @@ public class CardsRepositoryAdapter implements CardsRepositoryPort {
     
     @Override
     public void deleteCard(final DeleteCardCommand deleteCardCommand) {
-        cardsRepository.findById(deleteCardCommand.cardId())
+        getCardById(deleteCardCommand.cardId())
             .ifPresent(cardsRepository::delete);
         
     }
