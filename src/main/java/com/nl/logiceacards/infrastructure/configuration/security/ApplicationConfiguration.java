@@ -6,14 +6,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.nl.logiceacards.infrastructure.db.users.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -21,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class ApplicationConfiguration {
     
     private final UserDetailsService userDetailsService;
-  
+    
     
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
@@ -42,4 +37,5 @@ public class ApplicationConfiguration {
         
         return authProvider;
     }
+    
 }

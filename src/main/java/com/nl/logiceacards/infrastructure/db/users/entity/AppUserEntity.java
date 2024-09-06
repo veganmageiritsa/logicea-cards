@@ -16,7 +16,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -69,9 +68,9 @@ public class AppUserEntity implements UserDetails, Serializable {
     
     @ManyToMany
     @Fetch(FetchMode.JOIN)
-           @JoinTable(name = "app_users_roles",
-           joinColumns = @JoinColumn(name = "app_user_id"),
-           inverseJoinColumns = @JoinColumn(name = "app_role_id"))
+    @JoinTable(name = "app_users_roles",
+               joinColumns = @JoinColumn(name = "app_user_id"),
+               inverseJoinColumns = @JoinColumn(name = "app_role_id"))
     private Set<AppRoleEntity> roles = new HashSet<>();
     
     @Override
@@ -80,7 +79,7 @@ public class AppUserEntity implements UserDetails, Serializable {
         
         return roles
             .stream()
-            .map(role -> new SimpleGrantedAuthority( role.getName().toString()))
+            .map(role -> new SimpleGrantedAuthority(role.getName().toString()))
             .toList();
     }
     

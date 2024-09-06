@@ -1,5 +1,7 @@
 package com.nl.logiceacards.controllers;
 
+import java.sql.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import com.nl.logiceacards.ContainerIntegrationTest;
 import com.nl.logiceacards.domain.model.card.CardStatus;
+import com.nl.logiceacards.infrastructure.db.cards.repository.criteria.CardSearchCriteria;
 import com.nl.logiceacards.infrastructure.db.users.repository.AppUserRepository;
 import com.nl.logiceacards.infrastructure.web.requests.CreateCardRequest;
 import com.nl.logiceacards.infrastructure.web.requests.UpdateCardRequest;
@@ -127,6 +130,24 @@ class CardControllerTest extends ContainerIntegrationTest {
                             .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isForbidden());
         
+    }
+    
+    @Test
+    void controllerSearchCardsRequest() throws Exception {
+        var apiUser = appUserRepository.findById(2).orElseThrow();
+        var securityContext = SecurityContextHolder.getContext();
+        securityContext
+            .setAuthentication(new UsernamePasswordAuthenticationToken(apiUser, null, apiUser.getAuthorities()));
+        CardSearchCriteria criteria = new CardSearchCriteria();
+        criteria.setCreatedAt(Date.valueOf("2024-09-03"));
+        mockMvc.perform(MockMvcRequestBuilders
+                            .get("/app/search")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpectAll(
+                   MockMvcResultMatchers.jsonPath("$[0].id").value(4),
+                   MockMvcResultMatchers.jsonPath("$[1].id").value(5));
     }
     
 }

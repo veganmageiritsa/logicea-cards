@@ -5,14 +5,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.nl.logiceacards.domain.model.card.CardStatus;
-import com.nl.logiceacards.domain.model.card.command.UpdateCardCommand;
-import com.nl.logiceacards.infrastructure.db.users.entity.AppRoleType;
 import com.nl.logiceacards.infrastructure.db.users.entity.AppUserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -74,6 +71,5 @@ public class CardEntity implements Serializable {
     @Column(name = "updated_at")
     private Date updatedAt;
     
-   
     
 }

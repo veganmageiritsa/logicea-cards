@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.nl.logiceacards.application.port.in.AppAuthenticationUseCase;
 import com.nl.logiceacards.domain.model.user.AppLogin;
 import com.nl.logiceacards.infrastructure.web.requests.AppLoginRequest;
@@ -26,14 +25,5 @@ public class AppAuthenticationController {
             appAuthenticationUseCase.login(appLoginRequest)
         );
     }
-    
-//    @Mapper
-//    abstract static class AppAuthenticationControllerMapper {
-//
-//        private static final AppAuthenticationControllerMapper INSTANCE = Mappers.getMapper(AppAuthenticationControllerMapper.class);
-//
-//        abstract AppLoginResponse toDto(AppLogin domain);
-//
-//    }
     
 }
